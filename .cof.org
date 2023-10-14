@@ -1,0 +1,192 @@
+
+* Package Manager
+MEPA!!!!!
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives
+	     '("Melpa" . "https://melpa.org/packages/"))
+(package-initialize)
+#+END_SRC
+* Splash Screen
+What I see when I open Emacs.
+** Geting Rid of The Old One
+This stops the old splash screen.
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-splash-screen t)
+#+END_SRC
+* Time & Battery
+** Time
+Here you have the date and time. This is so I know the time and date, it's all set to how I like it.
+#+BEGIN_SRC emacs-lisp
+(setq display-time-24hr-format t)
+(setq display-time-format "%H:%M - %B %d %Y")
+(display-time-mode 1)
+#+END_SRC
+** Battery
+This way I know my battery life.
+#+BEGIN_SRC emacs-lisp
+;; (display-battery-mode 1)
+#+END_SRC
+* Term
+Key binding for Eshell. Eshell, the best shell in Emacs.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<s-return>") 'eshell)
+#+END_SRC
+
+* Tool Bar
+Removing the too bar. I do this to save screen space
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+#+END_SRC
+* Theme
+The Cyberpunk theme.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 
+(lambda () (load-theme 'cyberpunk t)))
+#+END_SRC 
+* Images
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c i") 'image-dired)
+#+END_SRC
+* Org-Mode
+Settings for org-mode
+** Stuff to Save Time
+Here is some stuff to help me save time. Here I put some keybindings to help me save time
+#+BEGIN_SRC emacs-lisp
+
+(defun code ()
+  (interactive)
+(insert "#+BEGIN_SRC 
+#+END_SR"))
+
+(defun blockquote ()
+  (interactive)
+(insert "#+BEGIN_QUOTE 
+#+END_QUOTE"))
+
+(defun latexsource ()
+  (interactive)
+(insert "#+BEGIN_LATEX latex 
+#+END_LATEX"))
+
+(defun dash ()
+  (interactive)
+(insert "─"))
+
+(global-set-key (kbd "C-c s") 'code)
+(global-set-key (kbd "C-c q") 'blockquote)
+(global-set-key (kbd "C-c l") 'latexsource)
+(global-set-key (kbd "C-x -") 'dash) 
+
+#+END_SRC 
+
+** Spell Check
+This is so I have a helm interface for spell-check
+#+BEGIN_SRC emacs-lisp
+(require 'flyspell-correct-helm)
+(define-key flyspell-mode-map (kbd "C-c ;") 'flyspell-correct-wrapper)
+#+END_SRC
+** Org-Export
+The ways you can export org-mode
+#+BEGIN_SRC emacs-lisp
+ '(org-startup-with-beamer-mode t)
+ '(quote
+   (org-export-backends
+    (quote (Ascii beamer html icalendar latex md odt groff rss))))
+#+END_SRC
+** Line Wraping
+This is so the lines wrap in Org-mode. IDK why the hell it's not by default.
+#+BEGIN_SRC emacs-lisp 
+ (setq org-startup-truncated nil)
+#+END_SRC 
+** Bullets
+This is just org bullets set with the package Org-bullets.
+#+BEGIN_SRC emacs-lisp 
+(setq org-bullets-bullet-list '("⨁" "⨁" "ᛟ" "ᛇ" "⛧"))
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC  
+ 
+* SDCV
+A dictionary for you.
+** Keybinding
+This is a keybinding to run SDCV. 
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c d") 'sdcv-search-input+)
+#+END_SRC
+* W3M
+W3M is a web browser I use.
+** Key Binding
+This is a keybinding for w3m
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x w") 'w3m)
+#+END_SRC
+** Browser Function 
+Setting W3M at the browser for all things emacs
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'w3m)
+#+END_SRC
+k** DuckDuckGo
+I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x d") 'engine/search-duckduckgo)
+
+(defengine duckduckgo
+  "https://duckduckgo.com/?q=%s")
+#+END_SRC
+* PDF-tools
+Setting up PDF-tools
+#+BEGIN_SRC emacs-lisp
+(pdf-tools-install)
+#+END_SRC
+*kk Music
+I use Bongo with Mplayer to play my music
+** Keybinding
+This is the keybinding to run bongo
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x m") 'bongo)
+#+END_SRC
+
+* Helm
+Right here are some keybindings for Helm
+** Find Files
+I also set dired to a new key
+#+BEGIN_SRC emacs-lisp
+(require 'helm-mode)
+
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+(global-set-key (kbd "C-x f") 'find-file)
+#+END_SRC
+** Buffers
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-b") 'helm-buffer-list)
+
+(setq helm-external-programs-associations (quote (("rmvb" . "smplayer") ("mp4" . "mpv"))))
+
+
+
+#+END_SRC
+* YouTube
+** load
+#+BEGIN_SRC emacs-lisp
+(load-file "~/org/ytel.el")
+#+END_SRC
+** watch
+#+BEGIN_SRC emacs-lisp
+(defun ytel-watch ()
+    "Stream video at point in mpv."
+    (interactive)
+    (let* ((video (ytel-get-current-video))
+     	   (id    (ytel-video-id video)))
+      (start-process "ytel mpv" nil
+		     "mpv"
+		     (concat "https://www.youtube.com/watch?v=" id))
+		     "--ytdl-format=bestvideo[height<=?720]+bestaudio/best")
+      (message "The video will start faggot"))
+
+;; the keysbinding
+
+(define-key ytel-mode-map "y" #'ytel-watch)
+#+END_SRC
