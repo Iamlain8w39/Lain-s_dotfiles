@@ -1,12 +1,6 @@
 ;; new mod-key. c-t? Who the hell came up with that
 (set-prefix-key (kbd "C-z"))
 
-
-;; Volume stuff
-
-(define-key *root-map* (kbd "XF86AudioLowerVolume") "exec mixer vol -7")
-(define-key *root-map* (kbd "XF86AudioRaiseVolume") "exec mixer vol +7")
-
 ;; theme Mode bar
 (setf
  stumpwm:*mode-line-background-color* "#333333"

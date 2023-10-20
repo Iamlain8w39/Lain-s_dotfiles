@@ -77,7 +77,7 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
 
 
 
-;; The keybindins
+;; The keybindings
 (global-set-key (kbd "C-x i") 'cad)
 (global-set-key (kbd "C-x a") 'vs)
 (global-set-key (kbd "C-x p") 'vp)
@@ -93,6 +93,8 @@ This is for mounting drives. If you are not on linux you may want to install "ls
 			 (completing-read "The drive you want to mount (with any you would like specified before):" nil t)))
   )
 
+
+;; The keybindings
 (global-set-key (kbd "C-c m") 'md)
 #+END_SRc
 
@@ -190,7 +192,7 @@ Setting up PDF-tools
 #+BEGIN_SRC emacs-lisp
 (pdf-tools-install)
 #+END_SRC
-*kk Music
+* Music
 I use Bongo with Mplayer to play my music
 ** Keybinding
 This is the keybinding to run bongo
