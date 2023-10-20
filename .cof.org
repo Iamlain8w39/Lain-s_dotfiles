@@ -28,7 +28,24 @@ This way I know my battery life.
 ;; (display-battery-mode 1)
 #+END_SRC
 
+* Term
+Key binding for Eshell. Eshell, the best shell in Emacs.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<s-return>") 'eshell)
+#+END_SRC
 
+* Tool Bar
+Removing the too bar. I do this to save screen space
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+#+END_SRC
+* Theme
+The Cyberpunk theme.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 
+(lambda () (load-theme 'cyberpunk t)))
+#+END_SRC
 * Sound
 After moving to FreeBSD I have to learn how audio and OSS worked. Back when I used linux I always just used pavucontrol and PulseAudio. This is just interactive functions — and keybindings — to said fictions for me to do audio stuff.
 #+BEGIN_SRC emacs-lisp
@@ -66,24 +83,19 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
 (global-set-key (kbd "C-x p") 'vp)
 (global-set-key (kbd "C-x n") 'vd) 
 #+END_SRc
-* Term
-Key binding for Eshell. Eshell, the best shell in Emacs.
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<s-return>") 'eshell)
-#+END_SRC
+* Drives
+This is for mounting drives. If you are not on linux you may want to install "lsblk". It is a tool install on systems that don't have it, and it will list your dives. Also the keybinding for them.
+#+BEGIN_SRC emacs lisp
+(defun md ()
+  (interactive)
+  (async-shell-command "lsblk")
+  (shell-command (format "mount %s /mnt/"
+			 (completing-read "The drive you want to mount (with any you would like specified before):" nil t)))
+  )
 
-* Tool Bar
-Removing the too bar. I do this to save screen space
-#+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-#+END_SRC
-* Theme
-The Cyberpunk theme.
-#+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 
-(lambda () (load-theme 'cyberpunk t)))
-#+END_SRC
+(global-set-key (kbd "C-c m") 'md)
+#+END_SRc
+
 * Images
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c i") 'image-dired)
@@ -155,15 +167,6 @@ This is a keybinding to run SDCV.
 #+END_SRC
 * W3M
 W3M is a web browser I use.
-** JewTube
-#+BEGIN_SRC emacs-lisp
-(autoload 'helm-youtube "helm-youtube" nil t)
-(global-set-key (kbd "C-c y") 'helm-youtube) ;; bind hotkey
-
-;;set default browser for you will use to play videos/default generic
-(setq browse-url-browser-function 'browse-url-generic)
-(setq browse-url-generic-program "google-chrome-open-url")
-#+END_SRC
 ** Key Binding
 This is a keybinding for w3m
 #+BEGIN_SRC emacs-lisp
@@ -211,8 +214,6 @@ I also set dired to a new key
 (global-set-key (kbd "C-x C-b") 'helm-buffer-list)
 
 (setq helm-external-programs-associations (quote (("rmvb" . "smplayer") ("mp4" . "mplayer"))))
-
-
 
 #+END_SRC
 
