@@ -50,7 +50,7 @@ The Cyberpunk theme.
 After moving to FreeBSD I have to learn how audio and OSS worked. Back when I used linux I always just used pavucontrol and PulseAudio. This is just interactive functions — and keybindings — to said fictions for me to do audio stuff.
 #+BEGIN_SRC emacs-lisp
 ;; Change Audio Device. This command will change your audio device
-(defun cad()
+(defun audio-change-audio-device()
   (interactive)
 (let ((list '("0" "1" "2" "3" "4" "5" "6" "7")))
   (shell-command (format "sysctl hw.snd.default_unit=%s" 
@@ -58,35 +58,36 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
 )
 
 ;; Voulme Show. This will show you your volume level
-(defun vs ()
+(defun audio-voulme-show ()
   (interactive)
   (shell-command "mixer")
   )
 
 ;; Voulme Up. This will move your volume up
-(defun vp ()
+(defun audio-volume-up ()
   (interactive)
   (shell-command "mixer vol +7")
   )
 
 ;; Voulme Down. This will move your volume down
-(defun vd ()
+(defun audio-volume-down ()
   (interactive)
   (shell-command "mixer vol -7")
   )
 
 
 
-;; The keybindings
-(global-set-key (kbd "C-x i") 'cad)
-(global-set-key (kbd "C-x a") 'vs)
-(global-set-key (kbd "C-x p") 'vp)
-(global-set-key (kbd "C-x n") 'vd) 
+;; The keybinding
+(global-set-key (kbd "C-x i") 'audio-change-audio-device)
+(global-set-key (kbd "C-x a") 'audio-voulme-show)
+(global-set-key (kbd "C-x p") 'audio-volume-up)
+(global-set-key (kbd "C-x n") 'audio-volume-down) 
 #+END_SRc
 * Drives
 This is for mounting drives. If you are not on linux you may want to install "lsblk". It is a tool install on systems that don't have it, and it will list your dives. Also the keybinding for them.
-#+BEGIN_SRC emacs lisp
-(defun md ()
+#+BEGIN_SRC emacs-lisp
+;;Just asking for arguments and the drive that you want to mount, and running the shell command to do so.
+(defun mount-drive ()
   (interactive)
   (async-shell-command "lsblk")
   (shell-command (format "mount %s /mnt/"
@@ -95,9 +96,23 @@ This is for mounting drives. If you are not on linux you may want to install "ls
 
 
 ;; The keybindings
-(global-set-key (kbd "C-c m") 'md)
-#+END_SRc
+(global-set-key (kbd "C-c m") 'mount-drive)
+#+END_SRC
+* Sci-Hub
+Like with the lsblk if you are not on Linux you may have to install wget. Here is a elisp function just for downloading PDFs from Sci-Hub. It is also a good idea the change the URL for Sci-Hub from time to time. The shell part is super bad and I hate it, but I will fix up sometime.
+#+BEGIN_SRC emacs-lisp
+;; Ask you for the doi and grabs the PDF from sci-hub
+(defun sci-hub_grab ()
+  (interactive)
+  (shell-command (format "curl https://sci-hub.ru/%s | grep location.href | awk -F'href=' '{print $2}' | awk -F'?' '{print $1}' | cut -c 2- | xargs -I {} wget https://sci-hub.ru{} -P ~/PDF"
+			 (completing-read "doi:" nil t)))
+  )
 
+
+;; The keybindings
+(global-set-key (kbd "C-x g") 'sci-hub_grab)
+
+#+END_SRC
 * Images
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c i") 'image-dired)
@@ -218,4 +233,9 @@ I also set dired to a new key
 (setq helm-external-programs-associations (quote (("rmvb" . "smplayer") ("mp4" . "mplayer"))))
 
 #+END_SRC
+
+
+
+
+
 
