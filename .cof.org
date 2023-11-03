@@ -228,11 +228,25 @@ I also set dired to a new key
 #+END_SRC
 ** Buffers
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-b") 'helm-buffer-list)
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 
 (setq helm-external-programs-associations (quote (("rmvb" . "smplayer") ("mp4" . "mplayer"))))
 
 #+END_SRC
+
+* EXWM
+Friendship ended with stumpwm. EXWM is my new best friend.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package exwm
+  :ensure t
+  :config
+  (require 'exwm-config)
+  (exwm-config-default))
+
+#+END_SRC
+
+
 
 
 
