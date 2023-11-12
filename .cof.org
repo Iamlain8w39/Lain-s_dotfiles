@@ -69,14 +69,34 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
   (shell-command "mixer vol -7")
   )
 
+;; Voulme Show. This will show you your volume level
+(defun audio-voulme-show-arch ()
+  (interactive)
+  (shell-command "pactl get-sink-volume 0")
+  )
 
+;; Voulme Up. This will move your volume up
+(defun audio-volume-up-arch ()
+  (interactive)
+  (shell-command "pactl set-sink-volume 0 +5%")
+  )
+
+;; Voulme Down. This will move your volume down
+(defun audio-volume-down-arch ()
+  (interactive)
+  (shell-command "pactl set-sink-volume 0 -5%")
+  )
 
 ;; The keybinding
 (global-set-key (kbd "C-x i") 'audio-change-audio-device)
 (global-set-key (kbd "C-x a") 'audio-voulme-show)
 (global-set-key (kbd "C-x p") 'audio-volume-up)
 (global-set-key (kbd "C-x n") 'audio-volume-down) 
-#+END_SRc
+;; The keybindings for arch
+(global-set-key (kbd "C-x a") 'audio-voulme-show-arch)
+(global-set-key (kbd "C-x p") 'audio-volume-up-arch)
+(global-set-key (kbd "C-x n") 'audio-volume-down-arch)
+#+END_SRC
 * Drives
 This is for mounting drives. If you are not on linux you may want to install "lsblk". It is a tool install on systems that don't have it, and it will list your dives. Also the keybinding for them.
 #+BEGIN_SRC emacs-lisp
