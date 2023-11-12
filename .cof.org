@@ -40,12 +40,6 @@ Removing the too bar. I do this to save screen space
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 #+END_SRC
-* Theme
-The Cyberpunk theme.
-#+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 
-(lambda () (load-theme 'cyberpunk t)))
-#+END_SRC
 * Sound
 After moving to FreeBSD I have to learn how audio and OSS worked. Back when I used linux I always just used pavucontrol and PulseAudio. This is just interactive functions — and keybindings — to said fictions for me to do audio stuff.
 #+BEGIN_SRC emacs-lisp
@@ -99,19 +93,9 @@ This is for mounting drives. If you are not on linux you may want to install "ls
 (global-set-key (kbd "C-c m") 'mount-drive)
 #+END_SRC
 * Sci-Hub
-Like with the lsblk if you are not on Linux you may have to install wget. Here is a elisp function just for downloading PDFs from Sci-Hub. It is also a good idea the change the URL for Sci-Hub from time to time. The shell part is super bad and I hate it, but I will fix up sometime.
+This is just a keybinding to use the scihub.el package. I had something I wrote in here before but this is wrote better.
 #+BEGIN_SRC emacs-lisp
-;; Ask you for the doi and grabs the PDF from sci-hub
-(defun sci-hub_grab ()
-  (interactive)
-  (shell-command (format "curl https://sci-hub.ru/%s | grep location.href | awk -F'href=' '{print $2}' | awk -F'?' '{print $1}' | cut -c 2- | xargs -I {} wget https://sci-hub.ru{} -P ~/PDF"
-			 (completing-read "doi:" nil t)))
-  )
-
-
-;; The keybindings
-(global-set-key (kbd "C-x g") 'sci-hub_grab)
-
+(global-set-key (kbd "C-x g") 'scihub)
 #+END_SRC
 * Images
 #+BEGIN_SRC emacs-lisp
@@ -123,29 +107,34 @@ Settings for org-mode
 Here is some stuff to help me save time. Here I put some keybindings to help me save time
 #+BEGIN_SRC emacs-lisp
 
-(defun code ()
-  (interactive)
-(insert "#+BEGIN_SRC 
-#+END_SR"))
+  (defun code ()
+    (interactive)
+    (insert "#+BEGIN_SRC 
+  ,#+END_SR"))
 
-(defun blockquote ()
-  (interactive)
-(insert "#+BEGIN_QUOTE 
-#+END_QUOTE"))
+  (defun blockquote ()
+    (interactive)
+    (insert "#+BEGIN_QUOTE 
+  ,#+END_QUOTE"))
 
-(defun latexsource ()
-  (interactive)
-(insert "#+BEGIN_LATEX latex 
-#+END_LATEX"))
+  (defun latexsource ()
+    (interactive)
+    (insert "#+BEGIN_LATEX latex 
+  ,#+END_LATEX"))
 
-(defun dash ()
-  (interactive)
-(insert "─"))
+  (defun dash ()
+    (interactive)
+    (insert "─"))
 
-(global-set-key (kbd "C-c s") 'code)
-(global-set-key (kbd "C-c q") 'blockquote)
-(global-set-key (kbd "C-c l") 'latexsource)
-(global-set-key (kbd "C-x -") 'dash) 
+  (defun point ()
+    (interactive)
+    (insert "§"))
+
+  (global-set-key (kbd "C-c s") 'code)
+  (global-set-key (kbd "C-c q") 'blockquote)
+  (global-set-key (kbd "C-c l") 'latexsource)
+  (global-set-key (kbd "C-x -") 'dash)
+  (global-set-key (kbd "C-x 7") 'point)
 
 #+END_SRC 
 
@@ -245,9 +234,6 @@ Friendship ended with stumpwm. EXWM is my new best friend.
   (exwm-config-default))
 
 #+END_SRC
-
-
-
 
 
 
