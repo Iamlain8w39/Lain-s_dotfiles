@@ -88,14 +88,14 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
   )
 
 ;; The keybinding
-(global-set-key (kbd "C-x i") 'audio-change-audio-device)
-(global-set-key (kbd "C-x a") 'audio-voulme-show)
-(global-set-key (kbd "C-x p") 'audio-volume-up)
-(global-set-key (kbd "C-x n") 'audio-volume-down) 
+;; (global-set-key (kbd "C-x i") 'audio-change-audio-device)
+;; (global-set-key (kbd "C-x a") 'audio-voulme-show)
+;;(global-set-key (kbd "C-x p") 'audio-volume-up)
+;; (global-set-key (kbd "C-x n") 'audio-volume-down) 
 ;; The keybindings for arch
-;;(global-set-key (kbd "C-x a") 'audio-voulme-show-arch)
-;;(global-set-key (kbd "C-x p") 'audio-volume-up-arch)
-;;(global-set-key (kbd "C-x n") 'audio-volume-down-arch)
+(global-set-key (kbd "C-x a") 'audio-voulme-show-arch)
+(global-set-key (kbd "C-x p") 'audio-volume-up-arch)
+(global-set-key (kbd "C-x n") 'audio-volume-down-arch)
 #+END_SRC
 * Drives
 This is for mounting drives. If you are not on linux you may want to install "lsblk". It is a tool install on systems that don't have it, and it will list your dives. Also the keybinding for them.
@@ -113,9 +113,10 @@ This is for mounting drives. If you are not on linux you may want to install "ls
 (global-set-key (kbd "C-c m") 'mount-drive)
 #+END_SRC
 * Sci-Hub
-This is just a keybinding to use the scihub.el package. I had something I wrote in here before but this is wrote better.
+This is just a keybinding to use the scihub.el package and setting a new place for the PDFs to go. I had something I wrote in here before but this is wrote better.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x g") 'scihub)
+;; the keybinding  
+  (global-set-key (kbd "C-x g") 'scihub)
 #+END_SRC
 * Images
 #+BEGIN_SRC emacs-lisp
@@ -245,17 +246,28 @@ I also set dired to a new key
 
 * EXWM
 Friendship ended with stumpwm. EXWM is my new best friend.
-
+** getting exwm runnin
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
   :ensure t
   :config
   (require 'exwm-config)
   (exwm-config-default))
-
 #+END_SRC
 
+** eye-candy
+Here we just set up all the eye candy stuff like transparency, wallpaper and running the compositor. 
+#+BEGIN_SRC emacs-lisp
+;; running a compositor
+  (async-shell-command "picom")
 
+;; setting wallpaper (a lot of sexy men :3)
+  (shell-command "feh --bg-fill --randomize ~/pic/wallpaper/")
+
+;; setting transparency
+  (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+  (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+#+END_SRC
 
 
 
