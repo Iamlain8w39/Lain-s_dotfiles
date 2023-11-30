@@ -256,13 +256,23 @@ Friendship ended with stumpwm. EXWM is my new best friend.
 #+END_SRC
 
 ** eye-candy
-Here we just set up all the eye candy stuff like transparency, wallpaper and running the compositor. 
+Here we just set up all the eye candy stuff like transparency, wallpaper and running the compositor. As I have ADHD or something I added a slide-show so my eyes can look at different images as I do stuff.
 #+BEGIN_SRC emacs-lisp
+;; definding a wallpaper funtion
+  (defun wallpaper-switch ()
+  (interactive)
+  (shell-command "feh --bg-fill --randomize ~/pic/wallpaper/"))
+
 ;; running a compositor
   (async-shell-command "picom")
 
 ;; setting wallpaper (a lot of sexy men :3)
-  (shell-command "feh --bg-fill --randomize ~/pic/wallpaper/")
+  (wallpaper-switch)
+
+;; for for slide-show wallpaper
+  (defun slide-show ()
+  (interactive)
+  (run-with-timer 0 (* 03 03) 'wallpaper-switch))
 
 ;; setting transparency
   (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
