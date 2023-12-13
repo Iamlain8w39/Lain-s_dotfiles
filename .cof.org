@@ -97,30 +97,14 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
 (global-set-key (kbd "C-x p") 'audio-volume-up-arch)
 (global-set-key (kbd "C-x n") 'audio-volume-down-arch)
 #+END_SRC
-* Drives
-This is for mounting drives. If you are not on linux you may want to install "lsblk". It is a tool install on systems that don't have it, and it will list your dives. Also the keybinding for them.
-#+BEGIN_SRC emacs-lisp
-;;Just asking for arguments and the drive that you want to mount, and running the shell command to do so.
-(defun mount-drive ()
-  (interactive)
-  (async-shell-command "lsblk")
-  (shell-command (format "mount %s /mnt/"
-			 (completing-read "The drive you want to mount (with any you would like specified before):" nil t)))
-  )
-
-
-;; The keybindings
-(global-set-key (kbd "C-c m") 'mount-drive)
-#+END_SRC
 * Sci-Hub
 This is just a keybinding to use the scihub.el package and setting a new place for the PDFs to go. I had something I wrote in here before but this is wrote better.
 #+BEGIN_SRC emacs-lisp
 ;; the keybinding  
   (global-set-key (kbd "C-x g") 'scihub)
-#+END_SRC
-* Images
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c i") 'image-dired)
+
+;; having it download the papers to ~/PDF
+ (setq scihub-download-directory "~/PDF/")
 #+END_SRC
 * Org-Mode
 Settings for org-mode
@@ -181,7 +165,7 @@ This is so the lines wrap in Org-mode. IDK why the hell it's not by default.
 ** Bullets
 This is just org bullets set with the package Org-bullets.
 #+BEGIN_SRC emacs-lisp 
-(setq org-bullets-bullet-list '("⨁" "⨁" "ᛟ" "ᛇ" "⛧"))
+(setq org-bullets-bullet-list '("⨁" "⨁" "ᛟ" "ᛇ" "ᛟ"))
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC  
  
@@ -191,6 +175,31 @@ A dictionary for you.
 This is a keybinding to run SDCV. 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c d") 'sdcv-search-input+)
+#+END_SRC
+* Dired
+** Moving
+ Moving around in dired create too many buffers, and no one wants that. This is so that dired doesn't do that. Along with some keys set for navigating the files. 
+#+BEGIN_SRC emacs-lisp
+(put 'dired-find-alternate-file 'disabled nil)
+    (progn
+      (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+      (define-key dired-mode-map (kbd "F") 'dired-find-alternate-file)
+      (define-key dired-mode-map (kbd "B") (lambda () (interactive) (find-alternate-file "..")))) 
+#+END_SRC
+** Listing
+Here we have the output of dired set up how I like it
+#+BEGIN_SRC emacs-lisp
+  (setq dired-listing-switches "-lah --group-directories-first")
+#+END_SRC
+** Bulk-Rename
+The ability to bulk rename is very useful. This is a keybinding for renaming files. 
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c C-r") 'wdired-change-to-wdired-mode)
+#+END_SRC
+** Images
+Just to look at images
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c i") 'image-dired)
 #+END_SRC
 * W3M
 W3M is a web browser I use.
@@ -232,8 +241,10 @@ I also set dired to a new key
 #+BEGIN_SRC emacs-lisp
 (require 'helm-mode)
 
+;; to open files with helm
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
+;; to open just dired
 (global-set-key (kbd "C-x f") 'find-file)
 #+END_SRC
 ** Buffers
