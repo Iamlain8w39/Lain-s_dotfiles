@@ -160,7 +160,7 @@ The ways you can export org-mode
 ** Line Wraping
 This is so the lines wrap in Org-mode. IDK why the hell it's not by default.
 #+BEGIN_SRC emacs-lisp 
- (setq org-startup-truncated nil)
+(setq org-startup-truncated nil)
 #+END_SRC 
 ** Bullets
 This is just org bullets set with the package Org-bullets.
@@ -180,6 +180,7 @@ This is a keybinding to run SDCV.
 ** Moving
  Moving around in dired create too many buffers, and no one wants that. This is so that dired doesn't do that. Along with some keys set for navigating the files. 
 #+BEGIN_SRC emacs-lisp
+(require 'dired)
 (put 'dired-find-alternate-file 'disabled nil)
     (progn
       (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
@@ -222,9 +223,16 @@ I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
   "https://duckduckgo.com/?q=%s")
 #+END_SRC
 * PDF-tools
+** setting up
 Setting up PDF-tools
 #+BEGIN_SRC emacs-lisp
 (pdf-tools-install)
+#+END_SRC
+** Theme 
+Here we set the night-theme for PDF-tools to use. And tell it what it to open PDFs in night-mode. 
+#+BEGIN_SRC emacs-lisp
+(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
+(setq pdf-view-midnight-colors '("#836319" . "#000000"))
 #+END_SRC
 * Music
 I use Bongo with Mplayer to play my music
