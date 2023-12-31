@@ -202,7 +202,7 @@ Just to look at images
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c i") 'image-dired)
 #+END_SRC
-* W3M
+* Web
 W3M is a web browser I use.
 ** Key Binding
 This is a keybinding for w3m
@@ -214,13 +214,52 @@ Setting W3M at the browser for all things emacs
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'w3m)
 #+END_SRC
-** DuckDuckGo
+** 
 I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x d") 'engine/search-duckduckgo)
-
 (defengine duckduckgo
   "https://duckduckgo.com/?q=%s")
+
+(defengine pubmed
+  "https://pubmed.ncbi.nlm.nih.gov/?term=%s")
+
+;; key bindings
+(global-set-key (kbd "C-x d") 'engine/search-duckduckgo)
+(global-set-key (kbd "C-c p") 'engine/search-pubmed)
+#+END_SRC
+** Elfeed
+Setting up my feeds in elfeed.
+#+BEGIN_SRC emacs-lisp
+(setq elfeed-feeds
+    (quote
+;;Blogs and news
+   (("https://protesilaos.com/master.xml" protesilaos)
+    ("https://lukesmith.xyz/index.xml" luke blog)
+    ("https://postmodernperennialist.substack.com/feed" jonathan culbreath)
+    ("https://ontoviolence.substack.com/feed" josephine)
+    ("https://www.daniellelayne.com/blog/blog-feed.xml" danielle a layne)
+    ("https://thepessimisticidealist.blogspot.com/feeds/posts/default" pessimistic idealism)
+    ("https://archlinux.org/feeds/news/" arch)
+    ("https://epochemagazine.org/authors/antonio-wolf/feed" antonio wolf)
+    ("https://empyreantrail.wordpress.com/feed" antonio wolf)
+    ("https://minervawisdom.com/feed" paul krause)
+    ("https://swindlesmccoop.xyz/rss.xml" swindles openbsd fan)
+    ("https://stallman.org/rss/rss.xml" rms)
+    ("https://norvig.com/rss-feed.xml" peter norvig)
+    ("https://www.peoplespolicyproject.org/feed/" matt bruenig and others)
+;; Youtube
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCK1HtOUD5s_3hhzy-bkpsiw" president sunday)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGVHC4L6gjS13AMe-JMOjHg" kane bate)
+    ("https://videos.lukesmith.xyz/feeds/videos.xml?sort=-publishedAt&isLocal=tru" luke smith videos)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCoH8_2jjMYjZ9Lsiv0wIiZg" aarvoll)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paul krause video)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbn9V8-9woHuXYcvffGNgtg" pessimistic idealism videos)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UC4V_jMdRbbTrmBVJB6FDzgw" unlearing economics)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCU1oodg2ptN51N5rwevwnng" unlearing economics live)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCdJdEguB1F1CiYe7OEi3SBg" john tron)
+;; podcast
+    ("https://occultofpersonality.net/feed" occult of personality)
+    ("http://archive.org/services/collection-rss.php?query=john%20zerzan" anarchy radio))))
 #+END_SRC
 * PDF-tools
 ** setting up
@@ -275,15 +314,12 @@ Friendship ended with stumpwm. EXWM is my new best friend.
 #+END_SRC
 
 ** eye-candy
-Here we just set up all the eye candy stuff like transparency, wallpaper and running the compositor. As I have ADHD or something I added a slide-show so my eyes can look at different images as I do stuff.
+Here we just set up all the eye candy stuff like transparency and wallpaper. As I have ADHD or something I added a slide-show so my eyes can look at different images as I do stuff.
 #+BEGIN_SRC emacs-lisp
 ;; definding a wallpaper funtion
   (defun wallpaper-switch ()
   (interactive)
   (shell-command "feh --bg-fill --randomize ~/pic/wallpaper/"))
-
-;; running a compositor
-  (async-shell-command "picom")
 
 ;; setting wallpaper (a lot of sexy men :3)
   (wallpaper-switch)
