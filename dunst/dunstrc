@@ -1,0 +1,9 @@
+# See dunst(5) for all configuration options
+
+[global]
+
+frame_color = "884cda"
+
+[play_sound]
+    summary = "*"
+    script = "/home/lain/.config/dunst/nsound.sh"
