@@ -111,6 +111,8 @@ Settings for org-mode
 ** Stuff to Save Time
 Here is some stuff to help me save time. Here I put some keybindings to help me save time
 #+BEGIN_SRC emacs-lisp
+(require 'org)
+
 
   (defun code ()
     (interactive)
@@ -169,6 +171,11 @@ This is just org bullets set with the package Org-bullets.
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC  
  
+** Timer
+This a keybinding set to a org-timer-set-timer. It will then send a notification to dunst. 
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c t") 'org-timer-set-timer)
+#+END_SRC
 * SDCV
 A dictionary for you.
 ** Keybinding
@@ -203,18 +210,13 @@ Just to look at images
 (global-set-key (kbd "C-c i") 'image-dired)
 #+END_SRC
 * Web
-W3M is a web browser I use.
-** Key Binding
-This is a keybinding for w3m
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x w") 'w3m)
-#+END_SRC
+W3M is a web browser I use when I don't use firefox. Thanks to tools like engine-mode it is often more convenient to use w3m. 
 ** Browser Function 
 Setting W3M at the browser for all things emacs
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'w3m)
 #+END_SRC
-** 
+** Search With Engine-Mode 
 I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
 #+BEGIN_SRC emacs-lisp
 (defengine duckduckgo
@@ -228,7 +230,7 @@ I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
 (global-set-key (kbd "C-c p") 'engine/search-pubmed)
 #+END_SRC
 ** Elfeed
-Setting up my feeds in elfeed.
+Setting up my feeds in elfeed. Having it setup like this means I have all my feed right here and they are all the same feeds on all my computers.
 #+BEGIN_SRC emacs-lisp
 (setq elfeed-feeds
     (quote
@@ -250,6 +252,8 @@ Setting up my feeds in elfeed.
 ;; Youtube
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCK1HtOUD5s_3hhzy-bkpsiw" president sunday)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGVHC4L6gjS13AMe-JMOjHg" kane bate)
+    ("https://filmsbykris.com/rss.xml" kris occhipinti)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSML_bQOzJAGMf9U51CKbrA" pierre tru-dank)
     ("https://videos.lukesmith.xyz/feeds/videos.xml?sort=-publishedAt&isLocal=tru" luke smith videos)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCoH8_2jjMYjZ9Lsiv0wIiZg" aarvoll)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paul krause video)
@@ -264,7 +268,7 @@ Setting up my feeds in elfeed.
 * PDF-tools
 ** setting up
 Setting up PDF-tools
-#+BEGIN_SRC emacs-lisp
+                      #+BEGIN_SRC emacs-lisp
 (pdf-tools-install)
 #+END_SRC
 ** Theme 
@@ -303,14 +307,24 @@ I also set dired to a new key
 #+END_SRC
 
 * EXWM
-Friendship ended with stumpwm. EXWM is my new best friend.
-** getting exwm runnin
+Friendship ended with StumpWM. EXWM is my new best friend. StumpWM was nice as Emacs was in itself a WM without the ability to manage X windows it only makes sense to do so. Running Emacs in StumpWM or any WM is like running a WM inside a WM.  
+** getting exwm running 
 #+BEGIN_SRC emacs-lisp
-  (use-package exwm
-  :ensure t
-  :config
-  (require 'exwm-config)
-  (exwm-config-default))
+    (use-package exwm
+    :ensure t
+    :config
+    (require 'exwm-config)
+    (exwm-config-default))
+
+;; seting up the two monitors. My laptops all have one so this can all be removed for those.3
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist '(0 "HDMI-1" 1 "DP-2"))
+;; more setup one of the monitor is vertical monitor. 
+  (add-hook 'exwm-randr-screen-change-hook
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output DP-1 --off --output HDMI-1 --off --output HDMI-2 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2 --mode 1920x1080 --pos 1920x0 --rotate right")))
+(exwm-randr-enable)
 #+END_SRC
 
 ** eye-candy
