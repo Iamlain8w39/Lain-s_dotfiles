@@ -176,6 +176,11 @@ This a keybinding set to a org-timer-set-timer. It will then send a notification
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c t") 'org-timer-set-timer)
 #+END_SRC
+** Installing Helm-Emoji.el
+This is just loading the package I built for in inserting emojis.
+#+BEGIN_SRC emacs-lisp
+(load-file "~/helm-emoji/helm-emoji.el")
+#+END_SRC
 * SDCV
 A dictionary for you.
 ** Keybinding
@@ -241,7 +246,10 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
     ("https://ontoviolence.substack.com/feed" josephine)
     ("https://www.daniellelayne.com/blog/blog-feed.xml" danielle a layne)
     ("https://thepessimisticidealist.blogspot.com/feeds/posts/default" pessimistic idealism)
+    ("https://theanarchistlibrary.org/feed" anarchist library)
     ("https://archlinux.org/feeds/news/" arch)
+    ("https://blog.ahwx.org/rss" ahwx)
+    ("https://blackfrancis.substack.com/feed" nullsci)
     ("https://epochemagazine.org/authors/antonio-wolf/feed" antonio wolf)
     ("https://empyreantrail.wordpress.com/feed" antonio wolf)
     ("https://minervawisdom.com/feed" paul krause)
