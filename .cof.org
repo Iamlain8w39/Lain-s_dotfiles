@@ -176,11 +176,6 @@ This a keybinding set to a org-timer-set-timer. It will then send a notification
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c t") 'org-timer-set-timer)
 #+END_SRC
-** Installing Helm-Emoji.el
-This is just loading the package I built for in inserting emojis.
-#+BEGIN_SRC emacs-lisp
-(load-file "~/helm-emoji/helm-emoji.el")
-#+END_SRC
 * SDCV
 A dictionary for you.
 ** Keybinding
@@ -314,6 +309,11 @@ I also set dired to a new key
 
 #+END_SRC
 
+** Installing Helm-Emoji.el
+This is just loading the package I built for in inserting emojis.
+#+BEGIN_SRC emacs-lisp
+(load-file "~/Helm-Emoji.el/helm-emoji.el")
+#+END_SRC
 * EXWM
 Friendship ended with StumpWM. EXWM is my new best friend. StumpWM was nice as Emacs was in itself a WM without the ability to manage X windows it only makes sense to do so. Running Emacs in StumpWM or any WM is like running a WM inside a WM.  
 ** getting exwm running 
@@ -325,14 +325,14 @@ Friendship ended with StumpWM. EXWM is my new best friend. StumpWM was nice as E
     (exwm-config-default))
 
 ;; seting up the two monitors. My laptops all have one so this can all be removed for those.3
-  (require 'exwm-randr)
-  (setq exwm-randr-workspace-output-plist '(0 "HDMI-1" 1 "DP-2"))
+;;  (require 'exwm-randr)
+;;  (setq exwm-randr-workspace-output-plist '(0 "HDMI-1" 1 "DP-2"))
 ;; more setup one of the monitor is vertical monitor. 
-  (add-hook 'exwm-randr-screen-change-hook
-          (lambda ()
-            (start-process-shell-command
-             "xrandr" nil "xrandr --output DP-1 --off --output HDMI-1 --off --output HDMI-2 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2 --mode 1920x1080 --pos 1920x0 --rotate right")))
-(exwm-randr-enable)
+;;  (add-hook 'exwm-randr-screen-change-hook
+;;          (lambda ()
+;;            (start-process-shell-command
+;;             "xrandr" nil "xrandr --output DP-1 --off --output HDMI-1 --off --output HDMI-2 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2 --mode 1920x1080 --pos 1920x0 --rotate right")))
+;;(exwm-randr-enable)
 #+END_SRC
 
 ** eye-candy
