@@ -179,7 +179,7 @@ This a keybinding set to a org-timer-set-timer. It will then send a notification
 ** Installing Helm-Emoji.el
 This is just loading the package I built for in inserting emojis.
 #+BEGIN_SRC emacs-lisp
-(load-file "~/helm-emoji/helm-emoji.el")
+(load-file "~/Helm-Emoji.el/helm-emoji.el")
 #+END_SRC
 * SDCV
 A dictionary for you.
@@ -250,7 +250,7 @@ I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
 Elfeed is the tool that I use to read rss feeds. I have used it as long as I have used emacs, and I could not use any other  rss feed reader.
 *** open in mpv
 Open videos in mpv. Code taken from [[https://web.archive.org/web/20201001162645/https://joshrollinswrites.com/help-desk-head-desk/20200611/][here]]
-#+BEGIN_QUOTE emacs-lisp 
+#+BEGIN_SRC emacs-lisp 
 (require 'elfeed)
 
 (defun elfeed-v-mpv (url)
@@ -269,7 +269,7 @@ Open videos in mpv. Code taken from [[https://web.archive.org/web/20201001162645
     (unless (use-region-p) (forward-line))))
 
 (define-key elfeed-search-mode-map (kbd "v") 'elfeed-view-mpv)
-#+END_QUOTE
+#+END_SRC
 *** elfeed with helm
 This is for a list of elfeed-tags in helm for me to search. This is a modification of what I found [[https://github.com/skeeto/elfeed/issues/82][here in this github issue]] 
 #+BEGIN_SRC emacs-lisp
