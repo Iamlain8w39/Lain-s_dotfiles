@@ -176,6 +176,11 @@ This a keybinding set to a org-timer-set-timer. It will then send a notification
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c t") 'org-timer-set-timer)
 #+END_SRC
+** Installing Helm-Emoji.el
+This is just loading the package I built for in inserting emojis.
+#+BEGIN_SRC emacs-lisp
+(load-file "~/helm-emoji/helm-emoji.el")
+#+END_SRC
 * SDCV
 A dictionary for you.
 ** Keybinding
@@ -184,6 +189,18 @@ This is a keybinding to run SDCV.
 (global-set-key (kbd "C-c d") 'sdcv-search-input+)
 #+END_SRC
 * Dired
+** Find Files
+I also set dired to a new key
+#+BEGIN_SRC emacs-lisp
+(require 'helm-mode)
+
+;; to open files with helm
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+;; to open just dired
+(global-set-key (kbd "C-x f") 'find-file)
+#+END_SRC
+
 ** Moving
  Moving around in dired create too many buffers, and no one wants that. This is so that dired doesn't do that. Along with some keys set for navigating the files. 
 #+BEGIN_SRC emacs-lisp
@@ -230,48 +247,107 @@ I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
 (global-set-key (kbd "C-c p") 'engine/search-pubmed)
 #+END_SRC
 ** Elfeed
+Elfeed is the tool that I use to read rss feeds. I have used it as long as I have used emacs, and I could not use any other  rss feed reader.
+*** open in mpv
+Open videos in mpv. Code taken from [[https://web.archive.org/web/20201001162645/https://joshrollinswrites.com/help-desk-head-desk/20200611/][here]]
+#+BEGIN_QUOTE emacs-lisp 
+(require 'elfeed)
+
+(defun elfeed-v-mpv (url)
+  "Watch a video from URL in MPV"
+  (async-shell-command (format "mpv %s" url)))
+
+(defun elfeed-view-mpv (&optional use-generic-p)
+  "Youtube-feed link"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+	     do (elfeed-untag entry 'unread)
+	     when (elfeed-entry-link entry)
+	     do (elfeed-v-mpv it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(define-key elfeed-search-mode-map (kbd "v") 'elfeed-view-mpv)
+#+END_QUOTE
+*** elfeed with helm
+This is for a list of elfeed-tags in helm for me to search. This is a modification of what I found [[https://github.com/skeeto/elfeed/issues/82][here in this github issue]] 
+#+BEGIN_SRC emacs-lisp
+;; a variable of the elfeed tags
+(defvar helm-elfeed-tags
+  (helm-build-sync-source "Elfeed tags"
+    :candidates #'elfeed-db-get-all-tags
+    :fuzzy-match t))
+
+;; the function that gives a list form the variable defined above
+(defun helm-elfeed-tags ()
+  (interactive)
+  (elfeed-search-set-filter (format "%s"
+   (let ((dummy (helm :sources '(helm-elfeed-tags)
+                     :volatile t)))
+    (mapconcat #'identity (helm-marked-candidates) " ")))))
+#+END_SRC
+*** my feeds
 Setting up my feeds in elfeed. Having it setup like this means I have all my feed right here and they are all the same feeds on all my computers.
 #+BEGIN_SRC emacs-lisp
 (setq elfeed-feeds
     (quote
 ;;Blogs and news
    (("https://protesilaos.com/master.xml" protesilaos)
-    ("https://lukesmith.xyz/index.xml" luke blog)
-    ("https://postmodernperennialist.substack.com/feed" jonathan culbreath)
+    ("https://lukesmith.xyz/index.xml" lukeblog)
+    ("https://postmodernperennialist.substack.com/feed" jonathanculbreath)
     ("https://ontoviolence.substack.com/feed" josephine)
-    ("https://www.daniellelayne.com/blog/blog-feed.xml" danielle a layne)
-    ("https://thepessimisticidealist.blogspot.com/feeds/posts/default" pessimistic idealism)
-    ("https://theanarchistlibrary.org/feed" anarchist library)
+    ("https://www.daniellelayne.com/blog/blog-feed.xml" daniellealayne)
+    ("https://thepessimisticidealist.blogspot.com/feeds/posts/default" pessimisticidealism)
+    ("https://theanarchistlibrary.org/feed" anarchistlibrary)
     ("https://archlinux.org/feeds/news/" arch)
     ("https://blog.ahwx.org/rss" ahwx)
     ("https://blackfrancis.substack.com/feed" nullsci)
-    ("https://epochemagazine.org/authors/antonio-wolf/feed" antonio wolf)
-    ("https://empyreantrail.wordpress.com/feed" antonio wolf)
-    ("https://minervawisdom.com/feed" paul krause)
-    ("https://swindlesmccoop.xyz/rss.xml" swindles openbsd fan)
+    ("https://epochemagazine.org/authors/antonio-wolf/feed" antoniowolf)
+    ("https://empyreantrail.wordpress.com/feed" antoniowolf)
+    ("https://minervawisdom.com/feed" paulkrause)
+    ("https://swindlesmccoop.xyz/rss.xml" swindles)
     ("https://stallman.org/rss/rss.xml" rms)
-    ("https://norvig.com/rss-feed.xml" peter norvig)
-    ("https://www.peoplespolicyproject.org/feed/" matt bruenig and others)
+    ("https://norvig.com/rss-feed.xml" peternorvig)
+    ("https://www.peoplespolicyproject.org/feed/" mattbruenigandothers)
 ;; Youtube
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCK1HtOUD5s_3hhzy-bkpsiw" president sunday)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGVHC4L6gjS13AMe-JMOjHg" kane bate)
-    ("https://filmsbykris.com/rss.xml" kris occhipinti)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSML_bQOzJAGMf9U51CKbrA" pierre tru-dank)
-    ("https://videos.lukesmith.xyz/feeds/videos.xml?sort=-publishedAt&isLocal=tru" luke smith videos)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCK1HtOUD5s_3hhzy-bkpsiw" presidentsunday)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGVHC4L6gjS13AMe-JMOjHg" kanebate)
+    ("https://filmsbykris.com/rss.xml" krisocchipinti)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSML_bQOzJAGMf9U51CKbrA" pierretru-dank)
+    ("https://videos.lukesmith.xyz/feeds/videos.xml?sort=-publishedAt&isLocal=tru" lukesmithvideos)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCoH8_2jjMYjZ9Lsiv0wIiZg" aarvoll)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paul krause video)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbn9V8-9woHuXYcvffGNgtg" pessimistic idealism videos)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UC4V_jMdRbbTrmBVJB6FDzgw" unlearing economics)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCU1oodg2ptN51N5rwevwnng" unlearing economics live)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCdJdEguB1F1CiYe7OEi3SBg" john tron)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paulkrausevideo)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbn9V8-9woHuXYcvffGNgtg" pessimisticidealismvideos)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UC4V_jMdRbbTrmBVJB6FDzgw" unlearingeconomics)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCU1oodg2ptN51N5rwevwnng" unlearingeconomicslive)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCdJdEguB1F1CiYe7OEi3SBg" johntron)
 ;; podcast
-    ("https://occultofpersonality.net/feed" occult of personality)
-    ("http://archive.org/services/collection-rss.php?query=john%20zerzan" anarchy radio))))
+    ("https://occultofpersonality.net/feed" occultofpersonality)
+    ("http://archive.org/services/collection-rss.php?query=john%20zerzan" anarchyradio))))
+#+END_SRC
+** Telega
+Telega is an emacs front-end for telegram. 
+*** mpv
+This is just telling telega to open all videos in mpv from youtube or file
+#+BEGIN_SRC emacs-lisp
+(require 'telega)
+;; open files in mpc
+(setq telega-video-player-command "mpv")
+
+;; open youtube videos with mpv
+(defun my-watch-in-mpv (url)
+  (async-shell-command (format "mpv -v %S" url)))
+
+(add-to-list 'telega-browse-url-alist
+             '("https?://\\(www\\.\\)?youtube.com/watch" . my-watch-in-mpv))
+(add-to-list 'telega-browse-url-alist
+             '("https?://youtu.be/" . my-watch-in-mpv))
 #+END_SRC
 * PDF-tools
 ** setting up
 Setting up PDF-tools
-                      #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (pdf-tools-install)
 #+END_SRC
 ** Theme 
@@ -290,17 +366,6 @@ This is the keybinding to run bongo
 
 * Helm
 Right here are some keybindings for Helm
-** Find Files
-I also set dired to a new key
-#+BEGIN_SRC emacs-lisp
-(require 'helm-mode)
-
-;; to open files with helm
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-;; to open just dired
-(global-set-key (kbd "C-x f") 'find-file)
-#+END_SRC
 ** Buffers
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
@@ -309,11 +374,6 @@ I also set dired to a new key
 
 #+END_SRC
 
-** Installing Helm-Emoji.el
-This is just loading the package I built for in inserting emojis.
-#+BEGIN_SRC emacs-lisp
-(load-file "~/Helm-Emoji.el/helm-emoji.el")
-#+END_SRC
 * EXWM
 Friendship ended with StumpWM. EXWM is my new best friend. StumpWM was nice as Emacs was in itself a WM without the ability to manage X windows it only makes sense to do so. Running Emacs in StumpWM or any WM is like running a WM inside a WM.  
 ** getting exwm running 
@@ -325,14 +385,14 @@ Friendship ended with StumpWM. EXWM is my new best friend. StumpWM was nice as E
     (exwm-config-default))
 
 ;; seting up the two monitors. My laptops all have one so this can all be removed for those.3
-;;  (require 'exwm-randr)
-;;  (setq exwm-randr-workspace-output-plist '(0 "HDMI-1" 1 "DP-2"))
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist '(0 "HDMI-1" 1 "DP-2"))
 ;; more setup one of the monitor is vertical monitor. 
-;;  (add-hook 'exwm-randr-screen-change-hook
-;;          (lambda ()
-;;            (start-process-shell-command
-;;             "xrandr" nil "xrandr --output DP-1 --off --output HDMI-1 --off --output HDMI-2 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2 --mode 1920x1080 --pos 1920x0 --rotate right")))
-;;(exwm-randr-enable)
+  (add-hook 'exwm-randr-screen-change-hook
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output DP-1 --off --output HDMI-1 --off --output HDMI-2 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2 --mode 1920x1080 --pos 1920x0 --rotate right")))
+(exwm-randr-enable)
 #+END_SRC
 
 ** eye-candy
