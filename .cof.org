@@ -227,7 +227,7 @@ Just to look at images
 (global-set-key (kbd "C-c i") 'image-dired)
 #+END_SRC
 ** Helm Drive Mounting
-
+This is for using helm to mount drives. Could be better, but this is fine.
 #+BEGIN_SRC emacs-lisp
 ;; puts the output of lsblk into helm. Then when an item is selected it then cuts part of that and puts it into the shell command which will cut it more. When it is all cut it will mount the drive.
 (defun helm-mount-drive () 
@@ -429,7 +429,7 @@ Here we just set up all the eye candy stuff like transparency and wallpaper. As 
 #+END_SRC
 
 ** helm program launching
-This is how I use helm as a program launcher running the function helm-run-external-command
+This is how I use helm as a program launcher running the function helm-run-external-command. Also using helm-M-x is nice.
 #+BEGIN_SRC emacs-lisp
 ;; for programs 
 (global-set-key (kbd "C-c r") 'helm-run-external-command)
