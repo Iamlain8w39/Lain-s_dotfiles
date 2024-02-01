@@ -364,6 +364,8 @@ This is just telling telega to open all videos in mpv from youtube or file
 (add-to-list 'telega-browse-url-alist
              '("https?://\\(www\\.\\)?youtube.com/watch" . my-watch-in-mpv))
 (add-to-list 'telega-browse-url-alist
+             '("https?://\\(www\\.\\)?youtube.com/shorts" . my-watch-in-mpv))
+(add-to-list 'telega-browse-url-alist
              '("https?://youtu.be/" . my-watch-in-mpv))
 #+END_SRC
 * PDF-tools
