@@ -44,30 +44,30 @@ Removing the too bar. I do this to save screen space
 After moving to FreeBSD I have to learn how audio and OSS worked. Back when I used linux I always just used pavucontrol and PulseAudio. This is just interactive functions — and keybindings — to said fictions for me to do audio stuff.
 #+BEGIN_SRC emacs-lisp
 ;; Change Audio Device. This command will change your audio device
-(defun audio-change-audio-device()
-  (interactive)
-(let ((list '("0" "1" "2" "3" "4" "5" "6" "7")))
-  (shell-command (format "sysctl hw.snd.default_unit=%s" 
-   (completing-read "Pick a device#:" list nil t))))
-)
+;;(defun audio-change-audio-device()
+;;  (interactive)
+;;(let ((list '("0" "1" "2" "3" "4" "5" "6" "7")))
+;;  (shell-command (format "sysctl hw.snd.default_unit=%s" 
+;;   (completing-read "Pick a device#:" list nil t))))
+;;)
 
 ;; Voulme Show. This will show you your volume level
-(defun audio-voulme-show ()
-  (interactive)
-  (shell-command "mixer")
-  )
+;;(defun audio-voulme-show ()
+;;  (interactive)
+;;  (shell-command "mixer")
+;;  )
 
 ;; Voulme Up. This will move your volume up
-(defun audio-volume-up ()
-  (interactive)
-  (shell-command "mixer vol +7")
-  )
+;;(defun audio-volume-up ()
+;;  (interactive)
+;;  (shell-command "mixer vol +7")
+;;  )
 
 ;; Voulme Down. This will move your volume down
-(defun audio-volume-down ()
-  (interactive)
-  (shell-command "mixer vol -7")
-  )
+;;(defun audio-volume-down ()
+;;  (interactive)
+;;  (shell-command "mixer vol -7")
+;;  )
 
 ;; Voulme Show. This will show you your volume level
 (defun audio-voulme-show-arch ()
@@ -226,6 +226,24 @@ Just to look at images
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c i") 'image-dired)
 #+END_SRC
+** Helm Drive Mounting
+
+#+BEGIN_SRC emacs-lisp
+;; puts the output of lsblk into helm. Then when an item is selected it then cuts part of that and puts it into the shell command which will cut it more. When it is all cut it will mount the drive.
+(defun helm-mount-drive () 
+  (interactive)
+  (async-shell-command (format "echo %s | cut -c7- | sudo xargs -I {} mount /dev/{} /mnt/drive"
+      (nth 0 (split-string 
+          (helm :sources (helm-build-async-source "lsblk"
+                :candidates-process
+                 (lambda ()
+                   (start-process "lsbk" nil "lsblk")
+))))))))
+
+
+;; keybinding
+(global-set-key (kbd "C-c m") 'helm-mount-drive)
+#+END_SRC
 * Web
 W3M is a web browser I use when I don't use firefox. Thanks to tools like engine-mode it is often more convenient to use w3m. 
 ** Browser Function 
@@ -249,7 +267,7 @@ I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
 ** Elfeed
 Elfeed is the tool that I use to read rss feeds. I have used it as long as I have used emacs, and I could not use any other  rss feed reader.
 *** open in mpv
-Open videos in mpv. Code taken from [[https://web.archive.org/web/20201001162645/https://joshrollinswrites.com/help-desk-head-desk/20200611/][here]]
+Open videos in mpv. Code taken from [[https://web.archive.org/web/20201001162645/https://joshrollinswrites.com/help-desk-head-desk/20200611/][here.]] Good for youtube and podcast.
 #+BEGIN_SRC emacs-lisp 
 (require 'elfeed)
 
@@ -288,7 +306,7 @@ This is for a list of elfeed-tags in helm for me to search. This is a modificati
     (mapconcat #'identity (helm-marked-candidates) " ")))))
 #+END_SRC
 *** my feeds
-Setting up my feeds in elfeed. Having it setup like this means I have all my feed right here and they are all the same feeds on all my computers.
+Setting up my feeds in elfeed. Having it setup like this means I have all my feeds right here and they are all the same feeds on all my computers.
 #+BEGIN_SRC emacs-lisp
 (setq elfeed-feeds
     (quote
@@ -300,6 +318,7 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
     ("https://www.daniellelayne.com/blog/blog-feed.xml" daniellealayne)
     ("https://thepessimisticidealist.blogspot.com/feeds/posts/default" pessimisticidealism)
     ("https://theanarchistlibrary.org/feed" anarchistlibrary)
+    ("https://matt.might.net/articles/feed.rss" mattmight)
     ("https://archlinux.org/feeds/news/" arch)
     ("https://blog.ahwx.org/rss" ahwx)
     ("https://blackfrancis.substack.com/feed" nullsci)
@@ -308,6 +327,7 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
     ("https://minervawisdom.com/feed" paulkrause)
     ("https://swindlesmccoop.xyz/rss.xml" swindles)
     ("https://stallman.org/rss/rss.xml" rms)
+    ("https://tymoon.eu/api/reader/atom" shinmera)
     ("https://norvig.com/rss-feed.xml" peternorvig)
     ("https://www.peoplespolicyproject.org/feed/" mattbruenigandothers)
 ;; Youtube
@@ -318,9 +338,11 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
     ("https://videos.lukesmith.xyz/feeds/videos.xml?sort=-publishedAt&isLocal=tru" lukesmithvideos)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCoH8_2jjMYjZ9Lsiv0wIiZg" aarvoll)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paulkrausevideo)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZrrEuHiQjN2CUo84g5tk7w" tripcode)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbn9V8-9woHuXYcvffGNgtg" pessimisticidealismvideos)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UC4V_jMdRbbTrmBVJB6FDzgw" unlearingeconomics)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCU1oodg2ptN51N5rwevwnng" unlearingeconomicslive)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UClt01z1wHHT7c5lKcU8pxRQ" hbomberguyfunnywarcrime)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCdJdEguB1F1CiYe7OEi3SBg" johntron)
 ;; podcast
     ("https://occultofpersonality.net/feed" occultofpersonality)
@@ -362,16 +384,6 @@ I use Bongo with Mplayer to play my music
 This is the keybinding to run bongo
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x m") 'bongo)
-#+END_SRC
-
-* Helm
-Right here are some keybindings for Helm
-** Buffers
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-
-(setq helm-external-programs-associations (quote (("rmvb" . "smplayer") ("mp4" . "mplayer"))))
-
 #+END_SRC
 
 * EXWM
@@ -416,5 +428,19 @@ Here we just set up all the eye candy stuff like transparency and wallpaper. As 
   (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 #+END_SRC
 
+** helm program launching
+This is how I use helm as a program launcher running the function helm-run-external-command
+#+BEGIN_SRC emacs-lisp
+;; for programs 
+(global-set-key (kbd "C-c r") 'helm-run-external-command)
+
+;; for elisp functions
+(global-set-key (kbd "M-x") 'helm-M-x)
+#+END_SRC
+** buffers
+Move between buffers with helm
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+#+END_SRC
 
 
