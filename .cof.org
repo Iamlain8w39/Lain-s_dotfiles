@@ -244,6 +244,22 @@ This is for using helm to mount drives. Could be better, but this is fine.
 ;; keybinding
 (global-set-key (kbd "C-c m") 'helm-mount-drive)
 #+END_SRC
+** Last Episode
+This is just for me to play the last episode of a show I was watching. This is badly written  and should be a lot better.
+#+BEGIN_SRC emacs-lisp
+;; the dumb way.
+(defun play-last-episode ()
+   (interactive)
+   (async-shell-command (format "ls | grep %s | xargs -I {} mpv {}"
+       (shell-command-to-string "cat note")
+)))
+
+;; The better way that needs work
+;; (with-temp-buffer 
+;;  (async-shell-command (format "ls | grep %s | xargs -I {} mpv {}" 
+;;    (insert-file-contents "note" (buffer-string)
+;;))))
+#+END_SRC
 * Web
 W3M is a web browser I use when I don't use firefox. Thanks to tools like engine-mode it is often more convenient to use w3m. 
 ** Browser Function 
