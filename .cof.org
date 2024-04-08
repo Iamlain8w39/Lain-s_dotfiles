@@ -70,21 +70,21 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
 ;;  )
 
 ;; Voulme Show. This will show you your volume level
-(defun audio-voulme-show-arch ()
+(defun audio-voulme-show-guix ()
   (interactive)
-  (shell-command "pactl get-sink-volume 0")
+  (shell-command "pamixer -m")
   )
 
 ;; Voulme Up. This will move your volume up
-(defun audio-volume-up-arch ()
+(defun audio-volume-up-guix ()
   (interactive)
-  (shell-command "pactl set-sink-volume 0 +5%")
+  (shell-command "pamixer -i 5")
   )
 
 ;; Voulme Down. This will move your volume down
-(defun audio-volume-down-arch ()
+(defun audio-volume-down-guix ()
   (interactive)
-  (shell-command "pactl set-sink-volume 0 -5%")
+  (shell-command "pamixer -d 5")
   )
 
 ;; The keybinding
@@ -93,9 +93,9 @@ After moving to FreeBSD I have to learn how audio and OSS worked. Back when I us
 ;;(global-set-key (kbd "C-x p") 'audio-volume-up)
 ;; (global-set-key (kbd "C-x n") 'audio-volume-down) 
 ;; The keybindings for arch
-(global-set-key (kbd "C-x a") 'audio-voulme-show-arch)
-(global-set-key (kbd "C-x p") 'audio-volume-up-arch)
-(global-set-key (kbd "C-x n") 'audio-volume-down-arch)
+(global-set-key (kbd "C-x a") 'audio-voulme-show-guix)
+(global-set-key (kbd "C-x p") 'audio-volume-up-guix)
+(global-set-key (kbd "C-x n") 'audio-volume-down-guix)
 #+END_SRC
 * Sci-Hub
 This is just a keybinding to use the scihub.el package and setting a new place for the PDFs to go. I had something I wrote in here before but this is wrote better.
@@ -133,15 +133,11 @@ Here is some stuff to help me save time. Here I put some keybindings to help me 
     (interactive)
     (insert "─"))
 
-  (defun point ()
-    (interactive)
-    (insert "§"))
 
   (global-set-key (kbd "C-c s") 'code)
   (global-set-key (kbd "C-c q") 'blockquote)
   (global-set-key (kbd "C-c l") 'latexsource)
   (global-set-key (kbd "C-x -") 'dash)
-  (global-set-key (kbd "C-x 7") 'point)
 
 #+END_SRC 
 
@@ -232,7 +228,7 @@ This is for using helm to mount drives. Could be better, but this is fine.
 ;; puts the output of lsblk into helm. Then when an item is selected it then cuts part of that and puts it into the shell command which will cut it more. When it is all cut it will mount the drive.
 (defun helm-mount-drive () 
   (interactive)
-  (async-shell-command (format "echo %s | cut -c7- | sudo xargs -I {} mount /dev/{} /mnt/drive"
+  (async-shell-command (format "echo %s | cut -c7- | sudo xargs -I {} mount /dev/{} /home/lain/drives/"
       (nth 0 (split-string 
           (helm :sources (helm-build-async-source "lsblk"
                 :candidates-process
@@ -355,6 +351,7 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCoH8_2jjMYjZ9Lsiv0wIiZg" aarvoll)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paulkrausevideo)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZrrEuHiQjN2CUo84g5tk7w" tripcode)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSkzHxIcfoEr69MWBdo0ppg" cuckphilosophy)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbn9V8-9woHuXYcvffGNgtg" pessimisticidealismvideos)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UC4V_jMdRbbTrmBVJB6FDzgw" unlearingeconomics)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCU1oodg2ptN51N5rwevwnng" unlearingeconomicslive)
@@ -408,11 +405,9 @@ This is the keybinding to run bongo
 Friendship ended with StumpWM. EXWM is my new best friend. StumpWM was nice as Emacs was in itself a WM without the ability to manage X windows it only makes sense to do so. Running Emacs in StumpWM or any WM is like running a WM inside a WM.  
 ** getting exwm running 
 #+BEGIN_SRC emacs-lisp
-    (use-package exwm
-    :ensure t
-    :config
-    (require 'exwm-config)
-    (exwm-config-default))
+(require 'exwm)
+(require 'exwm-config)
+(exwm-config-example)
 
 ;; seting up the two monitors. My laptops all have one so this can all be removed for those.3
   (require 'exwm-randr)
@@ -435,6 +430,9 @@ Here we just set up all the eye candy stuff like transparency and wallpaper. As 
 
 ;; setting wallpaper (a lot of sexy men :3)
   (wallpaper-switch)
+
+;; starting the compositor
+  (async-shell-command "picom")
 
 ;; for for slide-show wallpaper
   (defun slide-show ()
