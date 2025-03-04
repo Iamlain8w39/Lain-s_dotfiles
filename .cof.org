@@ -257,24 +257,26 @@ This is just for me to play the last episode of a show I was watching. This is b
 ;;))))
 #+END_SRC
 * Web
-W3M is a web browser I use when I don't use firefox. Thanks to tools like engine-mode it is often more convenient to use w3m. 
+W3M is a web browser I use when I don't use firefox. Thanks to tools like engine-mode (which I have made a few line replacement for) it is often more convenient to use w3m. 
 ** Browser Function 
 Setting W3M at the browser for all things emacs
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'w3m)
 #+END_SRC
 ** Search With Engine-Mode 
-I use engine-mode and set a key binding for DuckDuckGo. Feel free to add more.
+I used engine-mode but cuz it is like 200 lines more than I need I made my own engine-mode. I think this is better  
 #+BEGIN_SRC emacs-lisp
-(defengine duckduckgo
-  "https://duckduckgo.com/?q=%s")
+;; This is a function that puts a string into w3m as a duckduckgo search after deleting the "nil".
+(defun duckduckgo ()
+   (interactive)
+   (w3m-browse-url (format "https://duckduckgo.com/?q=%s"
+                   (delq nil
+	                 (browse-url-interactive-arg  "Duckduckgo: ")
+))))
 
-(defengine pubmed
-  "https://pubmed.ncbi.nlm.nih.gov/?term=%s")
 
-;; key bindings
-(global-set-key (kbd "C-x d") 'engine/search-duckduckgo)
-(global-set-key (kbd "C-c p") 'engine/search-pubmed)
+;; the keybinding
+(global-set-key (kbd "C-x d") 'duckduckgo)
 #+END_SRC
 ** Elfeed
 Elfeed is the tool that I use to read rss feeds. I have used it as long as I have used emacs, and I could not use any other  rss feed reader.
@@ -326,6 +328,7 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
    (("https://protesilaos.com/master.xml" protesilaos)
     ("https://lukesmith.xyz/index.xml" lukeblog)
     ("https://postmodernperennialist.substack.com/feed" jonathanculbreath)
+    ("https://krystalkyleandfriends.substack.com/feed" kylekulinski)
     ("https://ontoviolence.substack.com/feed" josephine)
     ("https://www.daniellelayne.com/blog/blog-feed.xml" daniellealayne)
     ("https://thepessimisticidealist.blogspot.com/feeds/posts/default" pessimisticidealism)
@@ -337,7 +340,6 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
     ("https://epochemagazine.org/authors/antonio-wolf/feed" antoniowolf)
     ("https://empyreantrail.wordpress.com/feed" antoniowolf)
     ("https://minervawisdom.com/feed" paulkrause)
-    ("https://swindlesmccoop.xyz/rss.xml" swindles)
     ("https://stallman.org/rss/rss.xml" rms)
     ("https://tymoon.eu/api/reader/atom" shinmera)
     ("https://norvig.com/rss-feed.xml" peternorvig)
@@ -345,11 +347,11 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
 ;; Youtube
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCK1HtOUD5s_3hhzy-bkpsiw" presidentsunday)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCGVHC4L6gjS13AMe-JMOjHg" kanebate)
-    ("https://filmsbykris.com/rss.xml" krisocchipinti)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSML_bQOzJAGMf9U51CKbrA" pierretru-dank)
     ("https://videos.lukesmith.xyz/feeds/videos.xml?sort=-publishedAt&isLocal=tru" lukesmithvideos)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCoH8_2jjMYjZ9Lsiv0wIiZg" aarvoll)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCeA_wmYM1oOQKAXL28VOIGA" paulkrausevideo)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UCldfgbzNILYZA4dmDt4Cd6A" kylekulinski)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZrrEuHiQjN2CUo84g5tk7w" tripcode)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSkzHxIcfoEr69MWBdo0ppg" cuckphilosophy)
     ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbn9V8-9woHuXYcvffGNgtg" pessimisticidealismvideos)
@@ -360,6 +362,21 @@ Setting up my feeds in elfeed. Having it setup like this means I have all my fee
 ;; podcast
     ("https://occultofpersonality.net/feed" occultofpersonality)
     ("http://archive.org/services/collection-rss.php?query=john%20zerzan" anarchyradio))))
+#+END_SRC
+*** rss notifications 
+I have taken this from reddit you can see [[https://www.reddit.com/r/emacs/comments/16vn6aa/is_anyone_using_elfeed_im_trying_to_add_a_hook_to/?rdt=37298][here]].
+#+BEGIN_SRC 
+(defun elfeed-desktop-notifications (entry)
+  "Parse and display new feeds as desktop notifications."
+  (alert (elfeed-deref (elfeed-entry-content entry))
+         :title (concat
+                 (elfeed-feed-title (elfeed-deref (elfeed-entry-feed entry))) "\n"
+                 (elfeed-deref (elfeed-entry-title entry))
+                 )
+         :severity 'high
+         ))
+
+(add-hook 'elfeed-new-entry-hook #'elfeed-desktop-notifications)
 #+END_SRC
 ** Telega
 Telega is an emacs front-end for telegram. 
@@ -382,11 +399,7 @@ This is just telling telega to open all videos in mpv from youtube or file
              '("https?://youtu.be/" . my-watch-in-mpv))
 #+END_SRC
 * PDF-tools
-** setting up
-Setting up PDF-tools
-#+BEGIN_SRC emacs-lisp
-(pdf-tools-install)
-#+END_SRC
+I <3 PDF-tools. I think it is maybe the best PDF reader you can use linux.
 ** Theme 
 Here we set the night-theme for PDF-tools to use. And tell it what it to open PDFs in night-mode. 
 #+BEGIN_SRC emacs-lisp
@@ -426,18 +439,20 @@ Here we just set up all the eye candy stuff like transparency and wallpaper. As 
 ;; definding a wallpaper funtion
   (defun wallpaper-switch ()
   (interactive)
-  (shell-command "feh --bg-fill --randomize ~/pic/wallpaper/"))
+  (shell-command "feh --bg-fill --randomize ~/pic/wallpaper/")
+  )
 
 ;; setting wallpaper (a lot of sexy men :3)
   (wallpaper-switch)
 
 ;; starting the compositor
-  (async-shell-command "picom")
+  (async-shell-command "picom --backend xrender & dunst")
 
 ;; for for slide-show wallpaper
   (defun slide-show ()
   (interactive)
-  (run-with-timer 0 (* 03 03) 'wallpaper-switch))
+  (run-with-timer 0 (* 03 03) 'wallpaper-switch)
+  )
 
 ;; setting transparency
   (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
